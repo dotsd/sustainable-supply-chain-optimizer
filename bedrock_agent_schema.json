@@ -1,0 +1,62 @@
+{
+  "openAPISchemaVersion": "3.0.0",
+  "info": {
+    "title": "CSV Ingestion API",
+    "version": "1.0.0",
+    "description": "API for ingesting CSV files from S3 to Glue tables"
+  },
+  "paths": {
+    "/ingest-csv": {
+      "post": {
+        "description": "Ingest CSV files from S3 bucket to Glue table",
+        "operationId": "ingest_csv_files",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bucket_name": {
+                    "type": "string",
+                    "description": "S3 bucket name containing CSV files"
+                  },
+                  "csv_prefix": {
+                    "type": "string",
+                    "description": "S3 prefix/folder path for CSV files"
+                  },
+                  "database_name": {
+                    "type": "string",
+                    "description": "Glue database name"
+                  },
+                  "table_name": {
+                    "type": "string",
+                    "description": "Glue table name"
+                  }
+                },
+                "required": ["bucket_name", "database_name", "table_name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful ingestion",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
