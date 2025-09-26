@@ -1,16 +1,22 @@
 import boto3
 import json
+import os
 from typing import Dict, Any, List
+from strands_client import StrandsWrapper
 
 class SourcingAgent:
     def __init__(self):
         self.bedrock_client = boto3.client('bedrock-runtime')
+        self.strands = StrandsWrapper(api_key=os.getenv('STRANDS_API_KEY'))
         
     def analyze_supplier_sustainability(self, suppliers: List[Dict]) -> Dict[str, Any]:
-        """Analyze supplier sustainability profiles"""
+        """Analyze supplier sustainability profiles using Strands AI"""
         results = []
         
         for supplier in suppliers:
+            # Use Strands for enhanced sustainability analysis
+            strands_analysis = self.strands.analyze_sustainability(supplier)
+            
             score = self._calculate_sustainability_score(supplier)
             recommendations = self._generate_recommendations(supplier, score)
             
@@ -21,13 +27,16 @@ class SourcingAgent:
                 'carbon_footprint': supplier.get('carbon_footprint', 0),
                 'certifications': supplier.get('certifications', []),
                 'recommendations': recommendations,
-                'risk_level': self._assess_risk_level(score)
+                'risk_level': self._assess_risk_level(score),
+                'strands_insights': strands_analysis.get('insights', []),
+                'strands_explanation': self.strands.generate_explanation({'sustainability_score': score})
             })
         
         return {
             'agent': 'sourcing',
             'analysis': results,
-            'top_suppliers': sorted(results, key=lambda x: x['sustainability_score'], reverse=True)[:5]
+            'top_suppliers': sorted(results, key=lambda x: x['sustainability_score'], reverse=True)[:5],
+            'strands_powered': True
         }
     
     def _calculate_sustainability_score(self, supplier: Dict) -> float:

@@ -3,10 +3,15 @@ import random
 from datetime import datetime
 from typing import Dict, Any, List
 from .base_agent import BaseAgent
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from strands_client import StrandsWrapper
 
 class DataGeneratorAgent(BaseAgent):
     def __init__(self):
         super().__init__("DataGeneratorAgent")
+        self.strands = StrandsWrapper(api_key=os.getenv('STRANDS_API_KEY'))
     
     async def process(self, parameters: Dict[str, Any]) -> Dict[str, Any]:
         suppliers = parameters.get('suppliers', 20)
@@ -21,12 +26,13 @@ class DataGeneratorAgent(BaseAgent):
         }
     
     def generate_suppliers(self, count: int) -> List[Dict[str, Any]]:
-        companies = ['GreenTech', 'EcoSupply', 'SustainCorp', 'CleanSource', 'BioMaterials']
+        # Use Strands to generate realistic company names
+        company_names = self.strands.generate_company_names(count, "sustainability")
         locations = ['USA', 'Germany', 'Japan', 'Canada', 'Sweden']
         
         return [{
             'id': str(uuid.uuid4()),
-            'name': f"{companies[i % len(companies)]} {i // len(companies) + 1}",
+            'name': company_names[i] if i < len(company_names) else f"Company {i+1}",
             'location': locations[i % len(locations)],
             'sustainability_score': random.randint(60, 100),
             'cost': random.randint(25, 75),

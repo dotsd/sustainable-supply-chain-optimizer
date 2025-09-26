@@ -203,6 +203,7 @@ curl -X POST http://localhost:5000/api/sustainability/analyze \
 AWS_REGION=us-east-1
 AWS_ACCOUNT_ID=your-account-id
 BEDROCK_AGENT_ID=your-agent-id
+STRANDS_API_KEY=your-strands-api-key
 ```
 
 ## 📈 Key Features
@@ -245,8 +246,14 @@ BEDROCK_AGENT_ID=your-agent-id
 # Test individual agents
 python test_agents.py
 
+# Test Strands SDK integration
+python test_strands_integration.py
+
 # Test enhanced orchestration (Phase 2 Step 2)
 python test_orchestration.py
+
+# Test complete integration
+python test_integration.py
 
 # Test API endpoints
 python test_api.py

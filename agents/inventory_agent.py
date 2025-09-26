@@ -1,10 +1,13 @@
 import boto3
 import json
+import os
 from typing import Dict, Any, List
+from strands_client import StrandsWrapper
 
 class InventoryAgent:
     def __init__(self):
         self.bedrock_client = boto3.client('bedrock-runtime')
+        self.strands = StrandsWrapper(api_key=os.getenv('STRANDS_API_KEY'))
         
     def generate_waste_reduction_recommendations(self, inventory_data: List[Dict]) -> Dict[str, Any]:
         """Generate waste reduction recommendations for inventory"""
@@ -27,12 +30,20 @@ class InventoryAgent:
             
             recommendations.extend(item_recommendations)
         
+        # Generate Strands-powered explanation
+        strands_explanation = self.strands.generate_explanation({
+            'waste_analysis': waste_analysis,
+            'total_items': len(inventory_data)
+        })
+        
         return {
             'agent': 'inventory',
             'waste_analysis': waste_analysis,
             'total_waste_reduction_potential': self._calculate_total_waste_reduction(waste_analysis),
             'priority_actions': self._prioritize_recommendations(recommendations),
-            'high_risk_items': [item for item in waste_analysis if item['waste_percentage'] > 15]
+            'high_risk_items': [item for item in waste_analysis if item['waste_percentage'] > 15],
+            'strands_explanation': strands_explanation,
+            'strands_powered': True
         }
     
     def _analyze_waste_metrics(self, item: Dict) -> Dict[str, float]:
