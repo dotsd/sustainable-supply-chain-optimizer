@@ -7,7 +7,7 @@ try:
     STRANDS_AVAILABLE = True
 except ImportError:
     STRANDS_AVAILABLE = False
-    print("⚠️ Strands SDK not available. Using fallback implementation.")
+    print("WARNING: Strands SDK not available. Using fallback implementation.")
 
 class StrandsWrapper:
     def __init__(self, api_key: str = None):
