@@ -1,0 +1,58 @@
+# Kubernetes Deployment Configuration
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supply-chain-optimizer
+  labels:
+    app: supply-chain-optimizer
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: supply-chain-optimizer
+  template:
+    metadata:
+      labels:
+        app: supply-chain-optimizer
+    spec:
+      containers:
+      - name: dashboard
+        image: supply-chain-optimizer:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: AWS_REGION
+          value: "us-east-1"
+        - name: STRANDS_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: strands-secret
+              key: api-key
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: supply-chain-optimizer-service
+spec:
+  selector:
+    app: supply-chain-optimizer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: strands-secret
+type: Opaque
+data:
+  api-key: <base64-encoded-strands-api-key>
