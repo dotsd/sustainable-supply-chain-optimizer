@@ -7,6 +7,7 @@ from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
 import boto3
 from agents.data_generator import DataGeneratorAgent
+from agents.agent_core import AgentCore
 
 # Initialize MCP Server
 server = Server("supply-chain-optimizer")
@@ -14,9 +15,10 @@ server = Server("supply-chain-optimizer")
 # AWS Bedrock client for agent interactions
 bedrock = boto3.client('bedrock-runtime', region_name='us-east-1')
 
-# Agent registry
+# Agent registry with Phase 2 integration
 agents = {
-    'data_generator': DataGeneratorAgent()
+    'data_generator': DataGeneratorAgent(),
+    'agent_core': AgentCore()
 }
 
 @server.list_tools()
@@ -43,6 +45,16 @@ async def list_tools() -> List[Tool]:
                     "data": {"type": "object"}
                 }
             }
+        ),
+        Tool(
+            name="orchestrate_sustainability_analysis",
+            description="Run complete sustainability analysis with all agents",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "supply_chain_data": {"type": "object"}
+                }
+            }
         )
     ]
 
@@ -51,6 +63,16 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
     if name == "generate_supply_chain_data":
         agent = agents['data_generator']
         result = await agent.execute(arguments)
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    
+    elif name == "analyze_suppliers":
+        agent_core = agents['agent_core']
+        result = agent_core.orchestrate_sustainability_analysis(arguments.get('data', {}))
+        return [TextContent(type="text", text=json.dumps(result, indent=2))]
+    
+    elif name == "orchestrate_sustainability_analysis":
+        agent_core = agents['agent_core']
+        result = agent_core.orchestrate_sustainability_analysis(arguments.get('supply_chain_data', {}))
         return [TextContent(type="text", text=json.dumps(result, indent=2))]
     
     raise ValueError(f"Unknown tool: {name}")
