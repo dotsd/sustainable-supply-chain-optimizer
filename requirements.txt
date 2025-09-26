@@ -8,4 +8,4 @@ qrcode[pil]>=7.4.2
 uuid
 flask>=2.3.0
 requests>=2.31.0
-strands-sdk>=1.0.0
+# strands-sdk>=1.0.0  # Commented out - not available in PyPI
