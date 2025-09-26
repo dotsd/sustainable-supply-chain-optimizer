@@ -38,7 +38,7 @@ class LambdaDeployer:
                 response = self.lambda_client.create_function(
                     FunctionName='sustainability-agents-orchestrator',
                     Runtime='python3.9',
-                    Role='arn:aws:iam::557017932249:role/LabRole',  # Use LabRole
+                    Role='arn:aws:iam::557017932249:role/lambda_execution_role',  # Use LabRole
                     Handler='lambda_handler.handler',
                     Code={'ZipFile': zip_content},
                     Description='Sustainability Supply Chain Agents Orchestrator',
