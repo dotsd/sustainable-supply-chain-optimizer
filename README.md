@@ -47,34 +47,102 @@ This solution provides comprehensive sustainability analysis through four specia
 - **Inventory Agent**: Generates waste reduction recommendations
 - **Carbon Accounting Agent**: Calculates overall carbon footprint and benchmarking
 
-## 🏗️ Architecture
+## 🏗️ System Architecture
 
+### **Agent Flow Architecture**
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   Bedrock       │    │   Lambda         │    │   Agent Core    │
-│   Agent         │───▶│   Orchestrator   │───▶│   Coordinator   │
+│   MCP Server    │    │   Strands SDK    │    │   Agent Core    │
+│   (Phase 1)     │───▶│   Integration    │───▶│   Orchestrator  │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
-                                                         │
-                       ┌─────────────────────────────────┼─────────────────────────────────┐
-                       │                                 │                                 │
-                       ▼                                 ▼                                 ▼
-              ┌─────────────────┐              ┌─────────────────┐              ┌─────────────────┐
-              │ Sourcing Agent  │              │ Logistics Agent │              │ Inventory Agent │
-              │ - Supplier      │              │ - Route         │              │ - Waste         │
-              │   Analysis      │              │   Optimization  │              │   Reduction     │
-              │ - Sustainability│              │ - Emission      │              │ - Stock         │
-              │   Scoring       │              │   Calculation   │              │   Optimization  │
-              └─────────────────┘              └─────────────────┘              └─────────────────┘
-                       │                                 │                                 │
-                       └─────────────────────────────────┼─────────────────────────────────┘
-                                                         ▼
-                                              ┌─────────────────┐
-                                              │ Carbon          │
-                                              │ Accounting      │
-                                              │ Agent           │
-                                              │ - Footprint     │
-                                              │ - Benchmarking  │
-                                              └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│ Data Generator  │    │ Context Passing  │    │ Enhanced        │
+│ Agent           │    │ & Error Handling │    │ Orchestration   │
+│ - Suppliers     │    │ - Retry Logic    │    │ - Flow Control  │
+│ - Routes        │    │ - Fallback Mode  │    │ - Result Agg    │
+│ - Products      │    │ - Quality Check  │    │ - Metadata      │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                                               │
+         └───────────────────────┬───────────────────────┘
+                                 ▼
+    ┌─────────────────────────────────────────────────────────────────┐
+    │                    Core Analysis Agents                        │
+    └─────────────────────────────────────────────────────────────────┘
+             │                │                │                │
+             ▼                ▼                ▼                ▼
+    ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
+    │ Sourcing Agent  │ │ Logistics Agent │ │ Inventory Agent │ │ Carbon Agent    │
+    │ - Strands AI    │ │ - Strands       │ │ - Strands       │ │ - Strands       │
+    │ - Sustainability│ │   Reasoning     │ │   Explanations  │ │   Insights      │
+    │ - Risk Analysis │ │ - Route Optim   │ │ - Waste Reduce  │ │ - Footprint     │
+    │ - Certifications│ │ - Emission Calc │ │ - Stock Optim   │ │ - Benchmarking  │
+    └─────────────────┘ └─────────────────┘ └─────────────────┘ └─────────────────┘
+             │                │                │                │
+             └────────────────┬────────────────┬────────────────┘
+                              ▼
+                    ┌─────────────────┐
+                    │ Executive       │
+                    │ Summary &       │
+                    │ Recommendations │
+                    └─────────────────┘
+```
+
+### **AWS Cloud Architecture**
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                              AWS Cloud Environment                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   Amazon S3     │    │   AWS Bedrock    │    │   AWS Lambda    │
+│   - CSV Files   │───▶│   - Claude 3     │───▶│   - Agent       │
+│   - Data Store  │    │   - AI Models    │    │     Orchestrator│
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
+│   AWS Glue      │    │   Amazon API     │    │   Amazon IAM    │
+│   - Data Catalog│    │   Gateway        │    │   - Roles       │
+│   - ETL Jobs    │    │   - REST APIs    │    │   - Policies    │
+└─────────────────┘    └──────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 ▼
+              ┌─────────────────────────────────────┐
+              │        External Integrations       │
+              │  ┌─────────────┐ ┌─────────────┐   │
+              │  │ Strands SDK │ │ MCP Server  │   │
+              │  │ - AI Engine │ │ - Protocol  │   │
+              │  └─────────────┘ └─────────────┘   │
+              └─────────────────────────────────────┘
+                                 │
+                                 ▼
+              ┌─────────────────────────────────────┐
+              │           Client Access            │
+              │  ┌─────────────┐ ┌─────────────┐   │
+              │  │ REST API    │ │ Bedrock     │   │
+              │  │ Endpoints   │ │ Agent Chat  │   │
+              │  └─────────────┘ └─────────────┘   │
+              └─────────────────────────────────────┘
+```
+
+### **Data Flow Architecture**
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Phase 1   │───▶│ Integration │───▶│   Phase 2   │───▶│   Results   │
+│ Data Gen    │    │  Adapter    │    │  Analysis   │    │ Dashboard   │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+      │                    │                    │                │
+      ▼                    ▼                    ▼                ▼
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│ 20 Suppliers│    │ Format      │    │ Sourcing    │    │ Sustainability
+│ 30 Routes   │    │ Conversion  │    │ Logistics   │    │ Score: 85/100
+│ 15 Products │    │ Validation  │    │ Inventory   │    │ Grade: A     │
+│ Realistic   │    │ Quality     │    │ Carbon      │    │ Recommendations
+│ Data        │    │ Check       │    │ Accounting  │    │ & Insights   │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
 ```
 
 ## 🚀 Quick Start
@@ -208,36 +276,36 @@ STRANDS_API_KEY=your-strands-api-key
 
 ## 📈 Key Features
 
-### ✅ Sourcing Agent
-- Supplier sustainability scoring (0-100)
-- Certification tracking (ISO14001, FSC, etc.)
-- Risk assessment (Low/Medium/High)
-- Renewable energy usage analysis
+### ✅ **Phase 1: Foundation**
+- **MCP Server**: Model Context Protocol for agent communication
+- **Data Generator Agent**: Creates 20 suppliers, 30 routes, 15 products
+- **Base Agent Pattern**: Abstract class foundation for all agents
+- **Strands Integration**: AI-powered company name generation
 
-### ✅ Logistics Agent  
-- Multi-modal transport optimization
-- Emission factor calculations
-- Route consolidation recommendations
-- Distance-based mode selection
+### ✅ **Phase 2 Step 1: Individual Agents**
+- **Sourcing Agent**: Supplier sustainability scoring, certifications, risk assessment
+- **Logistics Agent**: Multi-modal transport optimization, emission calculations
+- **Inventory Agent**: Waste analysis, expiry risk, stock optimization
+- **Carbon Accounting Agent**: Complete footprint aggregation, benchmarking
 
-### ✅ Inventory Agent
-- Waste percentage calculation
-- Expiry risk assessment
-- Overstock identification
-- FIFO implementation guidance
-
-### ✅ Carbon Accounting Agent
-- Complete footprint aggregation
-- Category-wise breakdown
-- Industry benchmarking
-- Reduction opportunity identification
-
-### ✅ Enhanced Orchestration (Phase 2 Step 2)
+### ✅ **Phase 2 Step 2: Enhanced Orchestration**
 - **Agent Communication Flow**: Sequential execution with context sharing
 - **Context Management**: Shared data store for cross-agent insights
 - **Error Handling & Retry**: Resilient execution with automatic recovery
 - **Result Validation**: Data flow integrity checks and validation
 - **Execution Monitoring**: Detailed timing and performance metrics
+
+### ✅ **Strands SDK Integration**
+- **Realistic Data Generation**: AI-powered company names and scenarios
+- **Enhanced Analysis**: Strands reasoning for all sustainability decisions
+- **Natural Language**: Human-readable explanations and insights
+- **Fallback Mode**: Works with or without Strands SDK
+
+### ✅ **AWS Cloud Integration**
+- **Bedrock Agents**: Claude 3 Sonnet for AI capabilities
+- **Lambda Functions**: Serverless agent orchestration
+- **S3 & Glue**: CSV data ingestion and cataloging
+- **API Gateway**: RESTful endpoints for external access
 
 ## 🧪 Testing
 
@@ -311,18 +379,31 @@ python deploy_agents_to_bedrock.py
 
 ## 🎯 Business Impact
 
-- **30-40%** potential emission reduction through route optimization
-- **20-60%** waste reduction through inventory optimization  
+### **Quantified Benefits:**
+- **30-40%** emission reduction through AI-powered route optimization
+- **20-60%** waste reduction via intelligent inventory management
 - **15-25%** supplier sustainability score improvement
 - **Real-time** carbon footprint tracking and benchmarking
 
+### **Technology Integration:**
+- **Strands AI**: Enhanced decision-making across all agents
+- **AWS Cloud**: Scalable, serverless architecture
+- **MCP Protocol**: Standardized agent communication
+- **Phase-based**: Modular development and deployment
+
 ## 🔮 Future Enhancements
 
-- Real-time data integration with ERP systems
-- Machine learning for demand forecasting
-- Blockchain for supply chain transparency
-- IoT sensor integration for real-time monitoring
-- Advanced visualization dashboard
+### **Phase 3: Interface & Demo (Next)**
+- Web dashboard with sustainability metrics
+- Real-time charts and visualizations
+- QR code deployment for demo access
+
+### **Advanced Features:**
+- Real-time ERP system integration
+- Machine learning demand forecasting
+- Blockchain supply chain transparency
+- IoT sensor monitoring
+- Mobile app for field operations
 
 ## 📞 Support
 
