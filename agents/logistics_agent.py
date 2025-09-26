@@ -1,11 +1,14 @@
 import boto3
 import json
+import os
 from typing import Dict, Any, List
 import math
+from strands_client import StrandsWrapper
 
 class LogisticsAgent:
     def __init__(self):
         self.bedrock_client = boto3.client('bedrock-runtime')
+        self.strands = StrandsWrapper(api_key=os.getenv('STRANDS_API_KEY'))
         
     def optimize_routes_for_emissions(self, routes: List[Dict]) -> Dict[str, Any]:
         """Optimize transportation routes for emission reduction"""
@@ -62,10 +65,17 @@ class LogisticsAgent:
         }
     
     def _optimize_single_route(self, route: Dict, emissions: Dict) -> Dict[str, Any]:
-        """Generate optimization recommendations for a single route"""
+        """Generate optimization recommendations using Strands reasoning"""
         distance = route.get('distance_km', 0)
-        recommendations = []
         
+        # Use Strands for intelligent transport reasoning
+        strands_reasoning = self.strands.reason_about_transport({
+            'distance_km': distance,
+            'current_mode': route.get('transport_mode', 'truck'),
+            'emissions': emissions
+        })
+        
+        recommendations = []
         if distance > 500:
             recommendations.append("Consider rail transport for long-distance shipping")
         if distance > 1000:
@@ -73,15 +83,9 @@ class LogisticsAgent:
         if emissions['current'] > 100:
             recommendations.append("Implement load consolidation to reduce trips")
         
-        # Recommend best transport mode based on distance
-        if distance < 100:
-            recommended_mode = 'truck'
-        elif distance < 500:
-            recommended_mode = 'rail'
-        else:
-            recommended_mode = 'ship'
-        
         return {
-            'recommended_mode': recommended_mode,
-            'recommendations': recommendations
+            'recommended_mode': strands_reasoning.get('mode', 'truck'),
+            'recommendations': recommendations,
+            'strands_reasoning': strands_reasoning.get('reasoning', ''),
+            'strands_powered': True
         }

@@ -1,10 +1,13 @@
 import boto3
 import json
+import os
 from typing import Dict, Any, List
+from strands_client import StrandsWrapper
 
 class CarbonAccountingAgent:
     def __init__(self):
         self.bedrock_client = boto3.client('bedrock-runtime')
+        self.strands = StrandsWrapper(api_key=os.getenv('STRANDS_API_KEY'))
         
     def calculate_overall_footprint(self, supply_chain_data: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate overall carbon footprint across supply chain"""
@@ -20,6 +23,13 @@ class CarbonAccountingAgent:
         
         total_footprint = sum(footprint_breakdown.values())
         
+        # Generate comprehensive Strands explanation
+        strands_explanation = self.strands.generate_explanation({
+            'total_carbon_footprint_tons': total_footprint,
+            'sustainability_score': self._calculate_overall_sustainability_score(supply_chain_data),
+            'footprint_breakdown': footprint_breakdown
+        })
+        
         return {
             'agent': 'carbon_accounting',
             'total_carbon_footprint_tons': total_footprint,
@@ -27,7 +37,9 @@ class CarbonAccountingAgent:
             'footprint_percentage': self._calculate_percentages(footprint_breakdown, total_footprint),
             'reduction_opportunities': self._identify_reduction_opportunities(footprint_breakdown),
             'sustainability_score': self._calculate_overall_sustainability_score(supply_chain_data),
-            'benchmarking': self._benchmark_performance(total_footprint)
+            'benchmarking': self._benchmark_performance(total_footprint),
+            'strands_explanation': strands_explanation,
+            'strands_powered': True
         }
     
     def _calculate_footprint_breakdown(self, sourcing: Dict, logistics: Dict, inventory: Dict) -> Dict[str, float]:
