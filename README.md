@@ -185,16 +185,27 @@ python test_api.py
 footprint reduction and waste minimization."
 ```
 
-### Via API Endpoint
+### Via API Endpoint (with Authentication)
 ```bash
 curl -X POST http://localhost:5000/api/sustainability/analyze \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: strands_api_key_ai_hackathon" \
   -d '{
     "supply_chain_data": {
       "suppliers": [...],
       "routes": [...], 
       "inventory": [...]
     }
+  }'
+```
+
+### Via Bedrock Agent Chat
+```bash
+curl -X POST http://localhost:5001/bedrock/agent/chat \
+  -H "Content-Type: application/json" \
+  -H "X-API-Key: strands_api_key_ai_hackathon" \
+  -d '{
+    "message": "Analyze sustainability for my supply chain"
   }'
 ```
 
@@ -272,6 +283,7 @@ AWS_REGION=us-east-1
 AWS_ACCOUNT_ID=your-account-id
 BEDROCK_AGENT_ID=your-agent-id
 STRANDS_API_KEY=your-strands-api-key
+BEDROCK_API_KEY=strands_api_key_ai_hackathon
 ```
 
 ## 📈 Key Features
@@ -323,8 +335,11 @@ python test_orchestration.py
 # Test complete integration
 python test_integration.py
 
-# Test API endpoints
+# Test API endpoints with authentication
 python test_api.py
+
+# Test Bedrock authentication
+python test_bedrock_auth.py
 
 # Test Bedrock integration
 python deploy_agents_to_bedrock.py

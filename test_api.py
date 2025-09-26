@@ -83,7 +83,10 @@ def test_api_endpoint():
         response = requests.post(
             f"{base_url}/api/sustainability/analyze",
             json=test_data,
-            headers={'Content-Type': 'application/json'}
+            headers={
+                'Content-Type': 'application/json',
+                'X-API-Key': 'strands_api_key_ai_hackathon'
+            }
         )
         
         if response.status_code == 200:

@@ -1,15 +1,26 @@
 from flask import Flask, request, jsonify
 from agents import AgentCore
+from bedrock_auth import BedrockAuthenticator
 import json
+import os
 
 app = Flask(__name__)
 agent_core = AgentCore()
+auth = BedrockAuthenticator(api_key="strands_api_key_ai_hackathon")
 
 @app.route('/api/sustainability/analyze', methods=['POST'])
 def analyze_sustainability():
-    """API endpoint for sustainability analysis"""
+    """API endpoint for sustainability analysis with authentication"""
     try:
         data = request.get_json()
+        
+        # Check API key authentication
+        api_key = request.headers.get('X-API-Key') or data.get('api_key')
+        if not auth.authenticate_request({'api_key': api_key}):
+            return jsonify({
+                'error': 'Invalid or missing API key',
+                'status': 'unauthorized'
+            }), 401
         
         # Validate required data
         if not data or 'supply_chain_data' not in data:
@@ -20,7 +31,8 @@ def analyze_sustainability():
         
         return jsonify({
             'status': 'success',
-            'results': results
+            'results': results,
+            'authenticated': True
         })
         
     except Exception as e:

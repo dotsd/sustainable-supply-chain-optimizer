@@ -2,6 +2,7 @@ import boto3
 import json
 import zipfile
 import os
+import time
 
 class BedrockAgentDeployer:
     def __init__(self):
@@ -43,7 +44,7 @@ class BedrockAgentDeployer:
             response = self.lambda_client.create_function(
                 FunctionName='sustainability-agents-orchestrator',
                 Runtime='python3.9',
-                Role='arn:aws:iam::<account-id>:role/lambda-execution-role',
+                Role='arn:aws:iam::557017932249:role/AmazonBedrockExecutionRoleForAgents_SustainabilityAgent',
                 Handler='lambda_handler.handler',
                 Code={'ZipFile': zip_content},
                 Description='Sustainability Supply Chain Agents Orchestrator',
@@ -53,7 +54,7 @@ class BedrockAgentDeployer:
             return response['FunctionArn']
         except Exception as e:
             print(f"Lambda function may already exist: {e}")
-            return f"arn:aws:lambda:<region>:<account-id>:function:sustainability-agents-orchestrator"
+            return f"arn:aws:lambda:us-west-2:557017932249:function:sustainability-agents-orchestrator"
     
     def _create_deployment_package(self):
         """Create deployment ZIP package"""
@@ -148,7 +149,7 @@ You can analyze:
 When users ask for sustainability analysis, use the analyze_sustainability function with their supply chain data including suppliers, routes, and inventory information.
 
 Provide actionable recommendations and clear metrics to help companies reduce their environmental impact.''',
-                agentResourceRoleArn='arn:aws:iam::<account-id>:role/AmazonBedrockExecutionRoleForAgents_<role-suffix>'
+                agentResourceRoleArn='arn:aws:iam::557017932249:role/WSParticipantRole'
             )
             return response['agent']['agentId']
         except Exception as e:

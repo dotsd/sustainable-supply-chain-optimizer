@@ -1,0 +1,2 @@
+BEDROCK_ROLE_ARN=arn:aws:iam::557017932249:role/AmazonBedrockExecutionRoleForAgents_SustainabilityAgent
+LAMBDA_ROLE_ARN=arn:aws:iam::557017932249:role/SustainabilityAgentLambdaExecutionRole
