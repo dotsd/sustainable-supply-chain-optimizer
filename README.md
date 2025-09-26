@@ -176,6 +176,20 @@ python api_endpoint.py
 python test_api.py
 ```
 
+### Strands Agents Quick Demo
+
+Run a standalone Strands Agent (uses fallback if SDK/auth not available):
+```bash
+python agent_demo.py
+```
+
+Ask a custom question:
+```bash
+python -c "from agent_demo import Agent, main"
+```
+
+If you have an API key/environment for Strands Agents set `STRANDS_API_KEY` and re-run.
+
 ## 📋 Sample Usage
 
 ### Via Bedrock Agent (Natural Language)
@@ -284,6 +298,10 @@ AWS_ACCOUNT_ID=your-account-id
 BEDROCK_AGENT_ID=your-agent-id
 STRANDS_API_KEY=your-strands-api-key
 BEDROCK_API_KEY=strands_api_key_ai_hackathon
+USE_AWS_AGENTCORE=0
+AGENTCORE_PROJECT_NAME=supply-chain-optimizer
+AGENTCORE_REGION=us-east-1
+AGENTCORE_WORKFLOW_ID=
 ```
 
 ## 📈 Key Features
@@ -314,6 +332,13 @@ BEDROCK_API_KEY=strands_api_key_ai_hackathon
 - **Fallback Mode**: Works with or without Strands SDK
 
 ### ✅ **AWS Cloud Integration**
+### ☁️ Optional: AWS AgentCore Integration (Scaffolding)
+If you enable `USE_AWS_AGENTCORE=1` and have the (future) AgentCore SDK installed, the system will:
+- Register local agents as callable remote tools
+- Attempt to execute the workflow through AgentCore before local fallback
+- Attach `agentcore_used` + execution `trace` to `orchestration_metadata`
+
+File reference: `orchestration/agentcore_adapter.py`
 - **Bedrock Agents**: Claude 3 Sonnet for AI capabilities
 - **Lambda Functions**: Serverless agent orchestration
 - **S3 & Glue**: CSV data ingestion and cataloging

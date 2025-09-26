@@ -3,8 +3,20 @@ import http.server
 import socketserver
 import webbrowser
 import os
+import socket
 
-PORT = 8001
+PORT = int(os.getenv("UI_PORT", "8004"))
+
+def find_free_port(preferred: int) -> int:
+    try:
+        with socketserver.TCPServer(("", preferred), None):
+            return preferred
+    except Exception:
+        s = socket.socket()
+        s.bind(("", 0))
+        port = s.getsockname()[1]
+        s.close()
+        return port
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
@@ -15,6 +27,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
 if __name__ == "__main__":
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     
+    PORT = find_free_port(PORT)
     with socketserver.TCPServer(("", PORT), CustomHandler) as httpd:
         print(f"AWS Supply Chain Optimizer UI running at:")
         print(f"http://localhost:{PORT}")

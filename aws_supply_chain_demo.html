@@ -403,7 +403,7 @@
             </div>
             <div class="chatbot-messages" id="chatMessages">
                 <div class="message bot-message">
-                    Hi! I'm your AI assistant powered by AWS Bedrock. I can help you understand our supply chain optimization platform. What would you like to know?
+                    Hi! I'm your AI assistant powered by AWS Bedrock Claude 3 Sonnet. I can help with supply chain sustainability, carbon footprint analysis, agent capabilities, and optimization strategies. What would you like to explore?
                 </div>
             </div>
             <div class="chatbot-input">
@@ -444,20 +444,56 @@
             addMessage(message, 'user');
             input.value = '';
 
-            // Simulate Bedrock response
+            // Enhanced Bedrock response with better context understanding
             setTimeout(() => {
-                let response = 'I can help you with supply chain optimization, sustainability analysis, and understanding our AI agents. What would you like to know?';
-                
-                if (message.toLowerCase().includes('agent')) {
-                    response = 'We have 6 specialized AI agents: Data Generator, Sourcing, Logistics, Inventory, Carbon Accounting, and Recommendation agents. Each focuses on a specific aspect of supply chain optimization.';
-                } else if (message.toLowerCase().includes('sustainability')) {
-                    response = 'Our platform analyzes your supply chain sustainability across sourcing, logistics, inventory, and carbon footprint. We provide actionable recommendations to reduce environmental impact.';
-                } else if (message.toLowerCase().includes('data')) {
-                    response = 'Our Data Generator Agent can create realistic supply chain datasets with 10-1000 data points for suppliers, routes, and products. This helps test and validate optimization strategies.';
-                }
-                
+                let response = getBotResponse(message.toLowerCase());
                 addMessage(response, 'bot');
             }, 1000);
+        }
+        
+        function getBotResponse(message) {
+            // Carbon footprint related questions
+            if (message.includes('carbon') || message.includes('footprint') || message.includes('emission')) {
+                return 'Carbon footprint measures total greenhouse gas emissions (CO2 equivalent) from your supply chain. Our Carbon Accounting Agent tracks emissions across sourcing (65%), logistics (25%), and operations (10%). We help identify reduction opportunities and benchmark against industry standards.';
+            }
+            
+            // Model/technology questions
+            if (message.includes('model') || message.includes('technology') || message.includes('bedrock') || message.includes('claude')) {
+                return 'I\'m powered by AWS Bedrock using Claude 3 Sonnet for natural language understanding. Our supply chain agents use advanced AI models for data analysis, optimization algorithms, and predictive analytics to deliver actionable sustainability insights.';
+            }
+            
+            // Agent related questions
+            if (message.includes('agent')) {
+                return 'We have 6 specialized AI agents: 🔢 Data Generator (creates realistic datasets), 🏭 Sourcing (supplier sustainability), 🚛 Logistics (route optimization), 📦 Inventory (waste reduction), 🌱 Carbon Accounting (footprint tracking), and 💡 Recommendation (actionable insights). Each agent specializes in specific supply chain aspects.';
+            }
+            
+            // Sustainability questions
+            if (message.includes('sustainability') || message.includes('sustainable') || message.includes('green')) {
+                return 'Our platform provides comprehensive sustainability analysis including supplier scoring (0-100), carbon footprint calculation, waste reduction strategies, and route optimization. We help achieve 30-40% emission reduction and 20-60% waste reduction through AI-powered recommendations.';
+            }
+            
+            // Data related questions
+            if (message.includes('data') || message.includes('generate') || message.includes('dataset')) {
+                return 'Our Data Generator Agent creates realistic supply chain datasets with customizable parameters (10-1000 suppliers, routes, products). It includes sustainability scores, certifications, carbon footprints, and inventory data. Generated data is immediately ready for analysis by other agents.';
+            }
+            
+            // Analysis questions
+            if (message.includes('analysis') || message.includes('analyze') || message.includes('report')) {
+                return 'Our complete analysis provides sustainability scoring, carbon footprint breakdown, KPI tracking, and prioritized recommendations. The system processes data in 0.274 seconds and delivers actionable insights with ROI projections and implementation timelines.';
+            }
+            
+            // Cost/savings questions
+            if (message.includes('cost') || message.includes('saving') || message.includes('roi') || message.includes('money')) {
+                return 'Our optimization delivers significant cost savings: $180K annually from logistics optimization, $95K freed from inventory optimization, plus 30-40% emission reduction. ROI typically achieved within 6-12 months through waste reduction and efficiency gains.';
+            }
+            
+            // Getting started questions
+            if (message.includes('start') || message.includes('begin') || message.includes('how') || message.includes('use')) {
+                return 'Getting started is easy! Click "🚀 Run Complete Analysis" for instant demo, explore individual agent capabilities by clicking the cards, or generate custom data with the Data Generator Agent. Each agent provides detailed dashboards and actionable recommendations.';
+            }
+            
+            // Default response
+            return 'I\'m your AI assistant for supply chain sustainability optimization. I can help with carbon footprint analysis, agent capabilities, data generation, cost savings, and getting started. What specific aspect would you like to explore?';
         }
 
         function addMessage(text, sender) {
@@ -492,6 +528,10 @@
             title.textContent = '🚀 Complete Supply Chain Analysis Results';
             content.innerHTML = `
                 <div style="margin-bottom: 2rem;">
+                    <div style="background: #f0f8ff; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #17a2b8;">
+                        <h4 style="color: #0c5460; margin-bottom: 0.5rem;">🌱 What is Carbon Footprint?</h4>
+                        <p style="color: #666; margin: 0; font-size: 0.9rem;">Carbon footprint measures the total greenhouse gas emissions (CO2 equivalent) produced by your supply chain activities including sourcing, manufacturing, transportation, and operations. Lower footprints indicate more sustainable practices.</p>
+                    </div>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
                         <div style="background: linear-gradient(135deg, #ff9900, #e88900); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
                             <h3 style="margin: 0; font-size: 2rem;">54.2</h3>
@@ -724,6 +764,20 @@
                         <div id="generatedDataPreview" style="display: none;">
                             <h4>Generated Data Preview</h4>
                             <div id="dataPreviewContent"></div>
+                            <div id="analysisLinks" style="margin-top: 1.5rem; padding: 1rem; background: #e8f5e8; border-radius: 4px;">
+                                <p style="margin-bottom: 1rem; font-weight: 500;">🔗 Ready for analysis by other agents:</p>
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <button onclick="closeModal(); setTimeout(() => openAgentModal('sourcing'), 100);" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                                        🏭 Analyze with Sourcing Agent
+                                    </button>
+                                    <button onclick="closeModal(); setTimeout(() => openAgentModal('logistics'), 100);" style="background: #17a2b8; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                                        🚛 Analyze with Logistics Agent
+                                    </button>
+                                    <button onclick="closeModal(); setTimeout(() => openAgentModal('inventory'), 100);" style="background: #ffc107; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-size: 0.9rem;">
+                                        📦 Analyze with Inventory Agent
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     `
                 },
@@ -925,26 +979,427 @@
             `;
             
             preview.style.display = 'block';
+            document.getElementById('analysisLinks').style.display = 'block';
         }
 
         function viewSourcingData() {
-            alert('📊 Sourcing Analysis Dashboard\n\nThis would open a detailed view with:\n• Supplier sustainability rankings\n• Certification status table\n• Risk assessment matrix\n• Performance trends\n• Filter options by location, score, certifications');
+            showAgentDashboard('sourcing');
         }
 
         function viewLogisticsData() {
-            alert('🚛 Logistics Analysis Dashboard\n\nThis would open a detailed view with:\n• Route optimization results\n• Emission reduction opportunities\n• Transport mode recommendations\n• Cost vs sustainability analysis\n• Interactive route maps');
+            showAgentDashboard('logistics');
         }
 
         function viewInventoryData() {
-            alert('📦 Inventory Analysis Dashboard\n\nThis would open a detailed view with:\n• Inventory optimization recommendations\n• Waste reduction opportunities\n• Demand forecasting charts\n• Stock level optimization\n• Expiry risk assessments');
+            showAgentDashboard('inventory');
+        }
+        
+        function showAgentDashboard(agentType) {
+            const modal = document.getElementById('agentModal');
+            const title = document.getElementById('modalTitle');
+            const content = document.getElementById('modalContent');
+            
+            const dashboards = {
+                'sourcing': {
+                    title: '📊 Sourcing Agent Dashboard',
+                    content: `
+                        <div style="margin-bottom: 2rem;">
+                            <p style="color: #666; margin-bottom: 2rem;">Comprehensive supplier sustainability analysis and risk assessment across your supply chain network.</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <div style="background: linear-gradient(135deg, #28a745, #218838); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">72/100</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Avg Sustainability Score</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">65%</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Certified Suppliers</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">12%</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">High Risk Suppliers</p>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                                <h4>Top Performing Suppliers</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #28a745;">
+                                        <span><strong>EcoTech Solutions</strong> - ISO14001, LEED Gold</span>
+                                        <span style="color: #28a745; font-weight: bold;">95/100</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #28a745;">
+                                        <span><strong>GreenSupply Corp</strong> - FSC, Carbon Neutral</span>
+                                        <span style="color: #28a745; font-weight: bold;">92/100</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #ffc107;">
+                                        <span><strong>SustainableCorp</strong> - ISO14001</span>
+                                        <span style="color: #ffc107; font-weight: bold;">78/100</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 8px;">
+                                <h4 style="color: #856404;">Risk Alerts</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #dc3545;">
+                                        <strong>⚠️ High Carbon Supplier:</strong> BasicMfg Inc (Carbon: 150 tons/month)
+                                    </div>
+                                    <div style="padding: 0.8rem; background: white; border-radius: 4px; border-left: 4px solid #ffc107;">
+                                        <strong>📋 Certification Expiry:</strong> MidTier Supply (ISO14001 expires in 60 days)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'logistics': {
+                    title: '🚛 Logistics Agent Dashboard',
+                    content: `
+                        <div style="margin-bottom: 2rem;">
+                            <p style="color: #666; margin-bottom: 2rem;">Transportation route optimization and emission reduction analysis across your logistics network.</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <div style="background: linear-gradient(135deg, #ff9900, #e88900); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">40%</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Emission Reduction</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #28a745, #218838); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">$180K</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Annual Savings</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">85%</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Routes Optimized</p>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                                <h4>Route Optimization Results</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #28a745;">
+                                        <span><strong>Factory A → Warehouse B</strong> (200km)</span>
+                                        <span style="color: #28a745;">Switch to Rail: -60% emissions</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #28a745;">
+                                        <span><strong>Supplier C → Factory A</strong> (800km)</span>
+                                        <span style="color: #28a745;">Consolidate: -35% emissions</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; border-left: 4px solid #ffc107;">
+                                        <span><strong>Distribution Hub</strong> (Multiple routes)</span>
+                                        <span style="color: #ffc107;">Optimize scheduling: -20% emissions</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 1.5rem; border-radius: 8px;">
+                                <h4 style="color: #0c5460;">Transport Mode Recommendations</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem;">
+                                        <strong>🚂 Rail Transport:</strong> Recommended for routes >500km (70% less emissions than truck)
+                                    </div>
+                                    <div style="padding: 0.8rem; background: white; border-radius: 4px;">
+                                        <strong>🚢 Sea Freight:</strong> International shipments (90% less emissions than air)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'inventory': {
+                    title: '📦 Inventory Agent Dashboard',
+                    content: `
+                        <div style="margin-bottom: 2rem;">
+                            <p style="color: #666; margin-bottom: 2rem;">Inventory optimization and waste reduction analysis to minimize environmental impact and costs.</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <div style="background: linear-gradient(135deg, #28a745, #218838); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">60%</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Waste Reduction</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">$95K</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Capital Freed</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #ffc107, #e0a800); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">35%</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Turnover Increase</p>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                                <h4>Inventory Optimization Results</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #28a745;">
+                                        <span><strong>Widget A</strong> (500 units, 180d shelf life)</span>
+                                        <span style="color: #28a745;">Reduce by 30%: -$15K waste</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #28a745;">
+                                        <span><strong>Component B</strong> (1200 units, 365d shelf life)</span>
+                                        <span style="color: #28a745;">Optimize FIFO: -$8K waste</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.8rem; background: white; border-radius: 4px; border-left: 4px solid #ffc107;">
+                                        <span><strong>Material C</strong> (800 units, 90d shelf life)</span>
+                                        <span style="color: #ffc107;">High risk: Implement JIT</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 1.5rem; border-radius: 8px;">
+                                <h4 style="color: #155724;">Waste Reduction Strategies</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem;">
+                                        <strong>📊 Demand Forecasting:</strong> AI-powered prediction reduces overstock by 45%
+                                    </div>
+                                    <div style="padding: 0.8rem; background: white; border-radius: 4px;">
+                                        <strong>⏰ FIFO Implementation:</strong> First-in-first-out reduces expiry waste by 70%
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'carbon': {
+                    title: '🌱 Carbon Accounting Agent Dashboard',
+                    content: `
+                        <div style="margin-bottom: 2rem;">
+                            <p style="color: #666; margin-bottom: 2rem;">Comprehensive carbon footprint tracking and environmental impact analysis across your entire supply chain.</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <div style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">4,827</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Total CO2 (tons)</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #ffc107, #e0a800); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">D</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Sustainability Grade</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #28a745, #218838); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">30%</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Reduction Potential</p>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                                <h4>Carbon Footprint Breakdown</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="margin-bottom: 1rem;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span><strong>🏭 Sourcing & Manufacturing (65%)</strong></span>
+                                            <span style="color: #dc3545; font-weight: bold;">3,137 tons CO2</span>
+                                        </div>
+                                        <div style="background: #e9ecef; height: 12px; border-radius: 6px;">
+                                            <div style="background: #dc3545; height: 100%; width: 65%; border-radius: 6px;"></div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1rem;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span><strong>🚛 Logistics & Transportation (25%)</strong></span>
+                                            <span style="color: #ffc107; font-weight: bold;">1,207 tons CO2</span>
+                                        </div>
+                                        <div style="background: #e9ecef; height: 12px; border-radius: 6px;">
+                                            <div style="background: #ffc107; height: 100%; width: 25%; border-radius: 6px;"></div>
+                                        </div>
+                                    </div>
+                                    <div style="margin-bottom: 1rem;">
+                                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                            <span><strong>⚡ Operations & Facilities (10%)</strong></span>
+                                            <span style="color: #28a745; font-weight: bold;">483 tons CO2</span>
+                                        </div>
+                                        <div style="background: #e9ecef; height: 12px; border-radius: 6px;">
+                                            <div style="background: #28a745; height: 100%; width: 10%; border-radius: 6px;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                                <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 8px;">
+                                    <h4 style="color: #856404;">🎯 Reduction Opportunities</h4>
+                                    <div style="margin-top: 1rem;">
+                                        <div style="padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #28a745;">
+                                            <strong>Rail Transport Switch:</strong> -1,930 tons CO2 (40% logistics reduction)
+                                        </div>
+                                        <div style="padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border-left: 4px solid #17a2b8;">
+                                            <strong>Supplier Training:</strong> -785 tons CO2 (25% sourcing reduction)
+                                        </div>
+                                        <div style="padding: 0.8rem; background: white; border-radius: 4px; border-left: 4px solid #ffc107;">
+                                            <strong>Renewable Energy:</strong> -290 tons CO2 (60% operations reduction)
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #d1ecf1; border: 1px solid #bee5eb; padding: 1.5rem; border-radius: 8px;">
+                                    <h4 style="color: #0c5460;">📊 Industry Benchmarking</h4>
+                                    <div style="margin-top: 1rem;">
+                                        <div style="padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem;">
+                                            <strong>Industry Average:</strong> 3,200 tons CO2
+                                            <div style="color: #dc3545; font-size: 0.9rem;">You're 51% above average</div>
+                                        </div>
+                                        <div style="padding: 0.8rem; background: white; border-radius: 4px; margin-bottom: 0.5rem;">
+                                            <strong>Best in Class:</strong> 2,100 tons CO2
+                                            <div style="color: #ffc107; font-size: 0.9rem;">Target for 2025</div>
+                                        </div>
+                                        <div style="padding: 0.8rem; background: white; border-radius: 4px;">
+                                            <strong>Net Zero Goal:</strong> <500 tons CO2
+                                            <div style="color: #28a745; font-size: 0.9rem;">Achievable by 2030</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 1.5rem; border-radius: 8px;">
+                                <h4 style="color: #155724;">📈 Progress Tracking</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                                    <div style="text-align: center; padding: 1rem; background: white; border-radius: 4px;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #28a745;">-15%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">YTD Reduction</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 1rem; background: white; border-radius: 4px;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #17a2b8;">Q3 2024</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Next Review</div>
+                                    </div>
+                                    <div style="text-align: center; padding: 1rem; background: white; border-radius: 4px;">
+                                        <div style="font-size: 1.5rem; font-weight: bold; color: #ffc107;">85%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Goal Progress</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                },
+                'recommendation': {
+                    title: '💡 Recommendation Agent Dashboard',
+                    content: `
+                        <div style="margin-bottom: 2rem;">
+                            <p style="color: #666; margin-bottom: 2rem;">AI-powered recommendations synthesized from all agents with prioritized action items and ROI projections.</p>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                                <div style="background: linear-gradient(135deg, #ff9900, #e88900); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">12</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Priority Actions</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #28a745, #218838); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">$455K</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Potential Savings</p>
+                                </div>
+                                <div style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 1.5rem; border-radius: 8px; text-align: center;">
+                                    <h3 style="margin: 0; font-size: 2rem;">8 months</h3>
+                                    <p style="margin: 0.5rem 0 0 0;">Avg ROI Timeline</p>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                                <h4 style="color: #856404;">🚀 High Impact Recommendations (0-30 days)</h4>
+                                <div style="margin-top: 1rem;">
+                                    <div style="display: flex; align-items: center; padding: 1rem; background: white; border-radius: 4px; margin-bottom: 0.8rem; border-left: 4px solid #dc3545;">
+                                        <span style="margin-right: 1rem; font-size: 1.5rem;">🚛</span>
+                                        <div style="flex: 1;">
+                                            <strong>Switch Long Routes to Rail Transport</strong>
+                                            <div style="font-size: 0.9rem; color: #666; margin-top: 0.3rem;">Impact: 40% emission reduction • Savings: $180K annually • Timeline: 2-4 weeks</div>
+                                            <div style="background: #dc3545; height: 4px; width: 95%; border-radius: 2px; margin-top: 0.5rem;"></div>
+                                        </div>
+                                        <div style="text-align: right; color: #dc3545; font-weight: bold;">Critical</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; padding: 1rem; background: white; border-radius: 4px; margin-bottom: 0.8rem; border-left: 4px solid #ffc107;">
+                                        <span style="margin-right: 1rem; font-size: 1.5rem;">🏭</span>
+                                        <div style="flex: 1;">
+                                            <strong>Contact Top 5 Carbon-Intensive Suppliers</strong>
+                                            <div style="font-size: 0.9rem; color: #666; margin-top: 0.3rem;">Impact: 25% sourcing reduction • Savings: $120K annually • Timeline: 1-2 weeks</div>
+                                            <div style="background: #ffc107; height: 4px; width: 85%; border-radius: 2px; margin-top: 0.5rem;"></div>
+                                        </div>
+                                        <div style="text-align: right; color: #ffc107; font-weight: bold;">High</div>
+                                    </div>
+                                    <div style="display: flex; align-items: center; padding: 1rem; background: white; border-radius: 4px; border-left: 4px solid #28a745;">
+                                        <span style="margin-right: 1rem; font-size: 1.5rem;">📦</span>
+                                        <div style="flex: 1;">
+                                            <strong>Implement FIFO Inventory System</strong>
+                                            <div style="font-size: 0.9rem; color: #666; margin-top: 0.3rem;">Impact: 60% waste reduction • Savings: $95K working capital • Timeline: 1 week</div>
+                                            <div style="background: #28a745; height: 4px; width: 75%; border-radius: 2px; margin-top: 0.5rem;"></div>
+                                        </div>
+                                        <div style="text-align: right; color: #28a745; font-weight: bold;">Medium</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                                    <h4>📅 Implementation Timeline</h4>
+                                    <div style="margin-top: 1rem;">
+                                        <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 4px; border-left: 4px solid #dc3545;">
+                                            <strong>Week 1-2: Quick Wins</strong>
+                                            <div style="color: #666; margin-top: 0.3rem; font-size: 0.9rem;">• Contact rail providers<br>• Implement FIFO system<br>• Schedule supplier meetings</div>
+                                        </div>
+                                        <div style="margin-bottom: 1rem; padding: 1rem; background: white; border-radius: 4px; border-left: 4px solid #ffc107;">
+                                            <strong>Month 1-3: Core Changes</strong>
+                                            <div style="color: #666; margin-top: 0.3rem; font-size: 0.9rem;">• Deploy route optimization<br>• Launch training programs<br>• Set reduction targets</div>
+                                        </div>
+                                        <div style="padding: 1rem; background: white; border-radius: 4px; border-left: 4px solid #28a745;">
+                                            <strong>Month 3-12: Scale & Monitor</strong>
+                                            <div style="color: #666; margin-top: 0.3rem; font-size: 0.9rem;">• Expand to new suppliers<br>• Track progress KPIs<br>• Achieve sustainability goals</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px;">
+                                    <h4>💰 ROI Projections</h4>
+                                    <div style="margin-top: 1rem;">
+                                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 4px;">
+                                                <div style="font-size: 1.5rem; font-weight: bold; color: #28a745;">$455K</div>
+                                                <div style="font-size: 0.9rem; color: #666;">Year 1 Savings</div>
+                                            </div>
+                                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 4px;">
+                                                <div style="font-size: 1.5rem; font-weight: bold; color: #17a2b8;">285%</div>
+                                                <div style="font-size: 0.9rem; color: #666;">ROI Percentage</div>
+                                            </div>
+                                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 4px;">
+                                                <div style="font-size: 1.5rem; font-weight: bold; color: #ffc107;">8 mo</div>
+                                                <div style="font-size: 0.9rem; color: #666;">Payback Period</div>
+                                            </div>
+                                            <div style="text-align: center; padding: 1rem; background: white; border-radius: 4px;">
+                                                <div style="font-size: 1.5rem; font-weight: bold; color: #ff9900;">$1.2M</div>
+                                                <div style="font-size: 0.9rem; color: #666;">3-Year Value</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 1.5rem; border-radius: 8px;">
+                                <h4 style="color: #155724;">📊 Success Metrics & KPIs</h4>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+                                    <div style="padding: 1rem; background: white; border-radius: 4px; text-align: center;">
+                                        <div style="font-size: 1.2rem; font-weight: bold; color: #dc3545;">-30%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Carbon Reduction Target</div>
+                                    </div>
+                                    <div style="padding: 1rem; background: white; border-radius: 4px; text-align: center;">
+                                        <div style="font-size: 1.2rem; font-weight: bold; color: #28a745;">+25%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Supplier Score Improvement</div>
+                                    </div>
+                                    <div style="padding: 1rem; background: white; border-radius: 4px; text-align: center;">
+                                        <div style="font-size: 1.2rem; font-weight: bold; color: #17a2b8;">90%</div>
+                                        <div style="font-size: 0.9rem; color: #666;">Implementation Success Rate</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                }
+            };
+            
+            const data = dashboards[agentType];
+            title.textContent = data.title;
+            content.innerHTML = data.content;
+            modal.style.display = 'block';
         }
 
         function viewCarbonData() {
-            alert('🌱 Carbon Analysis Dashboard\n\nThis would open a detailed view with:\n• Carbon footprint breakdown\n• Category-wise emissions\n• Industry benchmarking\n• Reduction opportunities\n• Compliance reporting');
+            showAgentDashboard('carbon');
         }
 
         function viewRecommendations() {
-            alert('💡 Recommendations Dashboard\n\nThis would open a detailed view with:\n• Prioritized action items\n• Cost-benefit analysis\n• Implementation timelines\n• ROI projections\n• Progress tracking');
+            showAgentDashboard('recommendation');
         }
 
         function exportReport() {

@@ -1,0 +1,19 @@
+version: '3.9'
+services:
+  api:
+    build: .
+    image: supply-chain-optimizer:latest
+    container_name: sc-optimizer-api
+    ports:
+      - "5000:5000"
+    environment:
+      AWS_REGION: "us-east-1"
+      USE_AWS_AGENTCORE: "0"
+      STRANDS_API_KEY: "${STRANDS_API_KEY:-demo-fallback}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped

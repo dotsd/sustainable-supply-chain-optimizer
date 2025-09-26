@@ -9,3 +9,6 @@ uuid
 flask>=2.3.0
 requests>=2.31.0
 # strands-sdk>=1.0.0  # Commented out - not available in PyPI
+strands-agents>=0.1.0  # Provides Agent class (lightweight) used for recommendation synthesis (graceful fallback if missing)
+# Strands Agents SDK (agentic framework). If installation fails during offline hackathon, comment this line and fall back to local wrappers.
+strands-agents

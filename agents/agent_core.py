@@ -6,10 +6,12 @@ from .sourcing_agent import SourcingAgent
 from .logistics_agent import LogisticsAgent
 from .inventory_agent import InventoryAgent
 from .carbon_accounting_agent import CarbonAccountingAgent
+from .recommendation_agent import RecommendationAgent
 
 # Import enhanced orchestrator
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from orchestration import AgentOrchestrator
+from orchestration.agentcore_adapter import AgentCoreAdapter
 
 class AgentCore:
     def __init__(self):
@@ -17,16 +19,46 @@ class AgentCore:
         self.logistics_agent = LogisticsAgent()
         self.inventory_agent = InventoryAgent()
         self.carbon_agent = CarbonAccountingAgent()
+        self.recommendation_agent = RecommendationAgent()
         self.orchestrator = AgentOrchestrator()
+        self.agentcore_adapter = AgentCoreAdapter()
+        if self.agentcore_adapter.enabled:
+            # Register local agent functions so AgentCore can call them
+            self.agentcore_adapter.register_local_agents(
+                self.sourcing_agent.analyze_supplier_sustainability,
+                self.logistics_agent.optimize_routes_for_emissions,
+                self.inventory_agent.generate_waste_reduction_recommendations,
+                self.carbon_agent.calculate_overall_footprint
+            )
         
     def orchestrate_sustainability_analysis(self, supply_chain_data: Dict[str, Any]) -> Dict[str, Any]:
         """Enhanced orchestration with proper flow control and context passing"""
         
         # Use enhanced orchestrator for Phase 2 Step 2 requirements
+        # If AgentCore is enabled, delegate workflow there first
+        if getattr(self.agentcore_adapter, 'enabled', False):
+            agentcore_result = self.agentcore_adapter.run_workflow(supply_chain_data)
+        else:
+            agentcore_result = {'agentcore_used': False}
+
         orchestration_result = self.orchestrator.orchestrate_agents(supply_chain_data)
         
         # Extract final results and add legacy summary for compatibility
         final_results = orchestration_result.get('final_results', {})
+        # Run recommendation synthesis (non-critical; fails silently)
+        try:
+            import asyncio
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            recommendation_payload = {'analysis_results': final_results}
+            rec_results = loop.run_until_complete(self.recommendation_agent.process(recommendation_payload))
+            final_results['recommendations'] = rec_results
+        except Exception as e:
+            final_results['recommendations'] = {
+                'agent': 'recommendation',
+                'error': str(e),
+                'fallback': True
+            }
         final_results['summary'] = self._generate_executive_summary(final_results)
         
         # Add orchestration metadata
@@ -34,7 +66,9 @@ class AgentCore:
             'orchestration_id': orchestration_result.get('orchestration_id'),
             'execution_time': orchestration_result.get('total_execution_time', 0),
             'agent_execution_summary': orchestration_result.get('execution_summary', {}),
-            'context_flow': orchestration_result.get('context_flow', [])
+            'context_flow': orchestration_result.get('context_flow', []),
+            'agentcore_used': agentcore_result.get('agentcore_used', False),
+            'agentcore_trace': agentcore_result.get('trace') if agentcore_result.get('agentcore_used') else None
         }
         
         return final_results
