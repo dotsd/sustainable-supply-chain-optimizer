@@ -1,0 +1,36 @@
+{
+  "suppliers": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "GreenTech 1",
+      "location": "USA",
+      "sustainabilityScore": 85,
+      "cost": 45,
+      "certifications": ["ISO 14001", "LEED"],
+      "carbonFootprint": 250
+    }
+  ],
+  "routes": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440001",
+      "origin": "New York",
+      "destination": "Los Angeles",
+      "mode": "rail",
+      "distance": 2800,
+      "emissionsPerMile": 0.1,
+      "cost": 850
+    }
+  ],
+  "products": [
+    {
+      "id": "550e8400-e29b-41d4-a716-446655440002",
+      "name": "Product 1",
+      "category": "Electronics",
+      "currentStock": 500,
+      "reorderPoint": 100,
+      "wasteRate": 0.05,
+      "holdingCost": 15
+    }
+  ],
+  "timestamp": "2024-01-15T10:30:00.000Z"
+}
